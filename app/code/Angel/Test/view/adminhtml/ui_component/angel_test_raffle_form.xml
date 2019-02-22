@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">angel_test_raffle_form.test_form_data_source</item>
+            <item name="deps" xsi:type="string">angel_test_raffle_form.test_form_data_source</item>
+        </item>
+        <item name="label" translate="true" xsi:type="string">General Information</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">angel_test_raffle_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="buttons" xsi:type="array">
+            <item name="save" xsi:type="string">Angel\Test\Block\Adminhtml\Raffle\Edit\TestButton</item>
+        </item>
+    </argument>
+    <dataSource name="test_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Angel\Test\Model\Test\DataProvider</argument>
+            <argument name="name" xsi:type="string">test_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">test_id</argument>
+            <argument name="requestFieldName" xsi:type="string">test_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" path="*/*/save" xsi:type="url"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <fieldset name="General">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string"/>
+            </item>
+        </argument>
+        <field name="product_id" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>number</dataType>
+                <label translate="true">Select a raffle product to test</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Angel\Test\Model\Raffle\SelectProduct"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+        <field name="total_time">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" translate="true" xsi:type="string">Total Time</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">Test</item>
+                    <item name="sortOrder" xsi:type="number">210</item>
+                    <item name="dataScope" xsi:type="string">total_time</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                        <item name="validate-greater-than-zero" xsi:type="boolean">true</item>
+                        <item name="less-than-equals-to" xsi:type="number">10000</item>
+                    </item>
+                    <item name="notice" translate="true" xsi:type="string">The total time to generate random numbers.</item>
+                </item>
+            </argument>
+        </field>
+        <field name="type" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">customer</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>number</dataType>
+                <label translate="true">Select type</label>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Angel\Test\Model\Test\Type"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+    </fieldset>
+</form>
