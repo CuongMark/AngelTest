@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+	<acl>
+		<resources>
+			<resource id="Magento_Backend::admin">
+				<resource id="Angel_Test::angel_test" sortOrder="10" title="Angel Test">
+					<resource id="Angel_Test::raffle" sortOrder="10" title="Raffle"/>
+					<resource id="Angel_Test::fifty" sortOrder="10" title="50/50 Raffle"/>
+				</resource>
+			</resource>
+		</resources>
+	</acl>
+</config>
