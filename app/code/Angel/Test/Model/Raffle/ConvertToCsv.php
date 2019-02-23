@@ -9,13 +9,14 @@ use Angel\Raffle\Model\Data\Prize;
 use Angel\Raffle\Model\Raffle;
 use Angel\Raffle\Model\ResourceModel\Number\Collection;
 use Angel\Raffle\Model\Data\Ticket;
-use Angel\Test\Model\Test\Type;
+use Angel\Test\Model\Raffle\Type;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Filesystem;
+use Magento\Payment\Gateway\Http\Client\Zend;
 
 /**
  * Class ConvertToCsv
@@ -64,9 +65,13 @@ class ConvertToCsv
         $stream->writeCsv([__('Total Tickets'), (int)$product->getTotalTickets()]);
         $stream->writeCsv([__('Total Prizes'), (int)$this->raffle->getTotalPrizes($product)]);
         $stream->writeCsv([__('Total Ticket Pruchased'), (int)$ticketCollection->getLastItem()->getEnd()]);
-        $randoms = $this->testGenerateRandomNumber($params['product_id'], $params['total_time']);
-        if ($params['type']==Type::DISTRIBUTION){
-            $randoms = $this->countWinningNumber($randoms);
+        $result = $this->testGenerateRandomNumber($params['product_id'], $params['total_time']);
+        if ($params['type'] == Type::RANDOM_NUMBER) {
+            $randoms = $result['winning_numbers'];
+        } else if ($params['type']==Type::DISTRIBUTION){
+            $randoms = $this->countWinningNumber($result['winning_numbers']);
+        } else if($params['type'] = Type::WINNING_PRIZE){
+            $randoms = $this->formatWinningPrize($result['winning_prize']);
         }
         foreach ($randoms as $item){
             if ($item)
@@ -80,6 +85,15 @@ class ConvertToCsv
             'value' => $file,
             'rm' => true  // can delete file after use
         ];
+    }
+
+    protected function formatWinningPrize($winningPrize){
+        ksort($winningPrize);
+        $result = [];
+        foreach ($winningPrize as $key => $item){
+            $result[] = [$key, $item];
+        }
+        return $result;
     }
 
     /**
@@ -116,14 +130,17 @@ class ConvertToCsv
             $ticketCollection = $this->raffle->getTickets($product);
             $prizes = $this->getPrizes($product);
             $result = [];
+            $winningPrizes = [];
             for ($i = 0; $i<$totalTime; $i++) {
                 $winningNumbers = [];
+                $newPrizes = $prizes;
                 foreach ($ticketCollection as $ticket) {
-                    $this->generateWinningNumber($product, $ticket, $prizes, $winningNumbers);
+                    $this->generateWinningNumber($product, $ticket, $newPrizes, $winningNumbers, $winningPrizes);
                 }
                 $result[] = $winningNumbers;
             }
-            return $result;
+
+            return ['winning_numbers' =>$result, 'winning_prize' => $winningPrizes];
         } catch (\Exception $e){
             return [];
         }
@@ -134,7 +151,7 @@ class ConvertToCsv
         $prizes = [];
         /** @var Prize $_prize */
         foreach ($prizeCollection as $_prize){
-            $prizes[] = (int)$_prize->getTotal();
+            $prizes[] = ['total' => (int)$_prize->getTotal(), 'prize' => (float)$_prize->getPrize()];
         }
         return $prizes;
     }
@@ -146,24 +163,33 @@ class ConvertToCsv
      * @param array $winningNumbers
      * @return []
      */
-    public function generateWinningNumber($product, $ticket, &$prizes, &$winningNumbers){
+    public function generateWinningNumber($product, $ticket, &$prizes, &$winningNumbers, &$winningPrizes){
         $totalTickets = (int)$product->getTotalTickets();
-
+        shuffle($prizes);
         $existed = [];
         $totalTicketNumber = $ticket->getEnd() - $ticket->getStart() + 1;
         $count = 0;
         /** @var \Angel\Raffle\Model\Data\Prize $prize */
-        foreach ($prizes as $totalPrizeLeft){
-            for ($i=0; $i < $totalPrizeLeft; $i++){
+        foreach ($prizes as &$_prize){
+            $winThisPrize = 0;
+            for ($i=0; $i < $_prize['total']; $i++){
                 $number = $this->raffle->getRandomNumber($ticket->getStart(), $totalTickets, $existed);
                 if ($number >= $ticket->getStart() && $number <= $ticket->getEnd()){
                     $winningNumbers[] = $number;
+                    if (isset($winningPrizes[$number])){
+                        $winningPrizes[$number] += $_prize['prize'];
+                    } else {
+                        $winningPrizes[$number] = $_prize['prize'];
+                    }
                     $count ++;
+                    $winThisPrize ++;
                     if ($totalTicketNumber <= $count){
+                        $_prize['total'] -= $winThisPrize;
                         return $winningNumbers;
                     }
                 }
             }
+            $_prize['total'] -= $winThisPrize;
         }
         return $winningNumbers;
     }

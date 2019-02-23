@@ -9,13 +9,14 @@
  * Please see LICENSE.txt for the full text of the OSL 3.0 license
  */
 
-namespace Angel\Test\Model\Test;
+namespace Angel\Test\Model\Raffle;
 
 class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
 
     const RANDOM_NUMBER = 0;
     const DISTRIBUTION = 1;
+    const WINNING_PRIZE = 2;
 
     /**
      * getAllOptions
@@ -26,7 +27,8 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
     {
         $this->_options = [
             ['value' => self::RANDOM_NUMBER, 'label' => __('Random Number')],
-            ['value' => self::DISTRIBUTION, 'label' => __('Distribution')]
+            ['value' => self::DISTRIBUTION, 'label' => __('Distribution')],
+            ['value' => self::WINNING_PRIZE, 'label' => __('Winning Prizes')]
         ];
         return $this->_options;
     }
@@ -41,6 +43,7 @@ class Type extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
         return array(
             self::RANDOM_NUMBER => __('Random Number'),
             self::DISTRIBUTION => __('Distribution'),
+            self::WINNING_PRIZE => __('Winning Prizes'),
         );
     }
 

@@ -89,7 +89,7 @@
             <formElements>
                 <select>
                     <settings>
-                        <options class="Angel\Test\Model\Test\Type"/>
+                        <options class="Angel\Test\Model\Raffle\Type"/>
                     </settings>
                 </select>
             </formElements>
