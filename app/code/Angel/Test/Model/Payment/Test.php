@@ -7,7 +7,7 @@ class Test extends \Magento\Payment\Model\Method\AbstractMethod
 {
 
     protected $_code = "test";
-    protected $_isOffline = true;
+    protected $_isOffline = false;
 
     public function isAvailable(
         \Magento\Quote\Api\Data\CartInterface $quote = null

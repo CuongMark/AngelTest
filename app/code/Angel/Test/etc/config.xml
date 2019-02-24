@@ -5,7 +5,7 @@
 			<test>
 				<active>1</active>
 				<model>Angel\Test\Model\Payment\Test</model>
-				<order_status>pending</order_status>
+				<order_status>processing</order_status>
 				<title>Test</title>
 				<allowspecific>0</allowspecific>
 				<group>offline</group>
