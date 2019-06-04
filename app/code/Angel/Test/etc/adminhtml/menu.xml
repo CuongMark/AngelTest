@@ -2,7 +2,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
 	<menu>
 		<add id="Angel::test_top_level" module="Angel_Test" resource="Angel_Test::angel_test" sortOrder="20" title="Test Raffle" />
-		<add action="angel_test/raffle/index" id="Angel_Test::raffle" module="Angel_Test" parent="Angel::test_top_level" resource="Angel_Test::raffle" sortOrder="9999" title="Test Raffle"/>
-		<add action="angel_test/fifty/index" id="Angel_Test::fifty" module="Angel_Test" parent="Angel::test_top_level" resource="Angel_Test::fifty" sortOrder="9999" title="Test 50/50"/>
+		<add action="angel_test/raffle/index" id="Angel_Test::raffle" module="Angel_Test" parent="Angel::test_top_level" resource="Angel_Test::raffle" sortOrder="10" title="Test Raffle"/>
+		<add action="angel_test/fifty/index" id="Angel_Test::fifty" module="Angel_Test" parent="Angel::test_top_level" resource="Angel_Test::fifty" sortOrder="20" title="Test 50/50"/>
+		<add action="angel_test/qoh/index" id="Angel_Test::oqh" module="Angel_Test" parent="Angel::test_top_level" resource="Angel_Test::qoh" sortOrder="20" title="Test Queen of Hearts"/>
 	</menu>
 </config>
