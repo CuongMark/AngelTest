@@ -71,7 +71,8 @@ class ConvertToCsv
         try {
             $winningNumber = RandomNumberGenerate::getWinningNumber($start, $end);
             $card = RandomNumberGenerate::drawCard($drawnCards);
-            $result[] = $winningNumber . ' - ' . $cards[$card];
+            $result[] = $winningNumber;
+            $result[] = $cards[$card];
             $drawnCards[] = $card;
 
             while (!Options::isQoH($card)) {
@@ -80,7 +81,9 @@ class ConvertToCsv
 
                 $winningNumber = RandomNumberGenerate::getWinningNumber($start, $end);
                 $card = RandomNumberGenerate::drawCard($drawnCards);
-                $result[] = $winningNumber . ' - ' . $cards[$card];
+                $result[] = $winningNumber;
+                $result[] = $cards[$card];
+//                $result[] = $winningNumber . ' - ' . $cards[$card];
                 $drawnCards[] = $card;
             }
         } catch (\Exception $e){
